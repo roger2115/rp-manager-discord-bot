@@ -62,7 +62,7 @@ describe('Sanitization Utils', () => {
 
   describe('encodeHTML', () => {
     it('should encode special characters', () => {
-      const input = '<>&"\\'';
+      const input = '<>&"\'';
       const result = encodeHTML(input);
       expect(result).toBe('&lt;&gt;&amp;&quot;&#x27;');
     });
