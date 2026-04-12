@@ -26,6 +26,9 @@ build/
 # Uploads
 uploads/
 
+# Credentials
+MY_CREDENTIALS.txt
+
 # Logs
 logs/
 *.log
