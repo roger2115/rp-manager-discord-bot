@@ -5,10 +5,6 @@ import { PrismaClient } from '@prisma/client';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Simple in-memory cache for bot guilds (5 minutes TTL)
-let botGuildsCache: { data: any[]; timestamp: number } | null = null;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
 /**
  * Get user's Discord guilds (filtered by bot presence)
  */
@@ -39,8 +35,6 @@ router.get('/', async (req: Request, res: Response) => {
       },
     });
 
-    console.log('Discord API response status:', response.status);
-
     if (!response.ok) {
       const errorData = await response.text();
       console.error('Discord API error:', errorData);
@@ -49,8 +43,26 @@ router.get('/', async (req: Request, res: Response) => {
 
     const userGuilds = await response.json();
 
-    // For now, return all user guilds
-    // TODO: Implement proper bot guild filtering
+    // Get bot guilds from internal endpoint
+    try {
+      const botGuildsResponse = await fetch('http://localhost:3003/api/bot-guilds');
+      
+      if (botGuildsResponse.ok) {
+        const { guildIds: botGuildIds } = await botGuildsResponse.json();
+        
+        // Filter user guilds to only include those where bot is present
+        const filteredGuilds = userGuilds.filter((guild: any) =>
+          botGuildIds.includes(guild.id)
+        );
+        
+        console.log(`Filtered ${userGuilds.length} user guilds to ${filteredGuilds.length} (bot is in ${botGuildIds.length} guilds)`);
+        return res.json(filteredGuilds);
+      }
+    } catch (error) {
+      console.error('Failed to fetch bot guilds:', error);
+    }
+
+    // Fallback: return all user guilds if bot guilds fetch fails
     res.json(userGuilds);
   } catch (error) {
     console.error('Error fetching guilds:', error);

@@ -14,6 +14,7 @@ import characterRoutes from './routes/characters';
 import progressionRoutes from './routes/progression';
 import guildsRoutes from './routes/guilds';
 import uploadRoutes from './routes/upload';
+import botGuildsRoutes from './routes/botGuilds';
 
 dotenv.config();
 
@@ -65,6 +66,7 @@ app.use('/api/characters', characterRoutes);
 app.use('/api/progression', progressionRoutes);
 app.use('/api/guilds', guildsRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/bot-guilds', botGuildsRoutes);
 
 // Serve uploaded files with CORS
 app.use('/uploads', cors({

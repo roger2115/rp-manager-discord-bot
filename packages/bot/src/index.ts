@@ -15,9 +15,34 @@ const client = new Client({
   ],
 });
 
-client.once(Events.ClientReady, (readyClient) => {
+client.once(Events.ClientReady, async (readyClient) => {
   console.log(`✅ Bot is ready! Logged in as ${readyClient.user.tag}`);
   console.log(`📊 Serving ${readyClient.guilds.cache.size} guilds`);
+
+  // Report guilds to backend
+  try {
+    const guildIds = Array.from(readyClient.guilds.cache.keys());
+    const apiUrl = process.env.API_URL || 'http://localhost:3003';
+    
+    const response = await fetch(`${apiUrl}/api/bot-guilds/report`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        guildIds,
+        botToken: process.env.DISCORD_BOT_TOKEN,
+      }),
+    });
+
+    if (response.ok) {
+      console.log(`✅ Reported ${guildIds.length} guilds to backend`);
+    } else {
+      console.error('Failed to report guilds to backend');
+    }
+  } catch (error) {
+    console.error('Error reporting guilds:', error);
+  }
 });
 
 client.on(Events.MessageCreate, async (message: Message) => {

@@ -171,13 +171,27 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-900">
+    <div className="min-h-screen bg-dark-900 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Gradient orbs */}
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-primary-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-secondary-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-primary-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f12_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f12_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+      </div>
+
       {/* Navigation */}
-      <nav className="bg-dark-800 border-b border-primary-900/50">
+      <nav className="relative bg-dark-800/80 backdrop-blur-md border-b border-primary-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center">
+                <span className="text-white font-bold text-xl">RP</span>
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
                 RP Manager
               </h1>
             </div>
@@ -206,12 +220,17 @@ export default function Dashboard() {
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Server Selector */}
           <div className="lg:col-span-1">
-            <div className="bg-dark-800 border border-primary-900/50 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-primary-400 mb-4">Twoje Serwery</h2>
+            <div className="bg-dark-800/80 backdrop-blur-md border border-primary-900/50 rounded-lg p-6 shadow-xl">
+              <h2 className="text-xl font-semibold text-primary-400 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                Twoje Serwery
+              </h2>
               {guilds.length === 0 ? (
                 <p className="text-gray-500 text-sm">Nie znaleziono serwerów</p>
               ) : (
@@ -220,10 +239,10 @@ export default function Dashboard() {
                     <button
                       key={guild.id}
                       onClick={() => setSelectedGuild(guild.id)}
-                      className={`w-full text-left p-3 rounded-lg transition-all ${
+                      className={`w-full text-left p-3 rounded-lg transition-all transform hover:scale-[1.02] ${
                         selectedGuild === guild.id
-                          ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white'
-                          : 'bg-dark-700 text-gray-300 hover:bg-dark-600 border border-primary-900/30'
+                          ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white shadow-lg'
+                          : 'bg-dark-700/50 text-gray-300 hover:bg-dark-700 border border-primary-900/30'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -249,11 +268,16 @@ export default function Dashboard() {
 
           {/* Characters List */}
           <div className="lg:col-span-2">
-            <div className="bg-dark-800 border border-primary-900/50 rounded-lg p-6">
+            <div className="bg-dark-800/80 backdrop-blur-md border border-primary-900/50 rounded-lg p-6 shadow-xl">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-primary-400">Twoje Postacie</h2>
+                <h2 className="text-xl font-semibold text-primary-400 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                  </svg>
+                  Twoje Postacie
+                </h2>
                 <button 
-                  className="px-4 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
                   disabled={!selectedGuild}
                   onClick={() => setShowCreateModal(true)}
                 >

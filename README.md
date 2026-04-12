@@ -145,24 +145,41 @@ Bot will delete your message and send it as the character via webhook.
 
 ## Deployment
 
-### Backend + Bot
+For detailed production deployment instructions, see **[DEPLOYMENT.md](./DEPLOYMENT.md)**.
 
-Deploy to any Node.js hosting (Railway, Render, Heroku):
+### Quick Deploy Options
 
-1. Set environment variables
-2. Run migrations: `npx prisma migrate deploy`
-3. Start: `npm start`
+**Recommended Stack**:
+- **Frontend**: Vercel (free tier)
+- **Backend + Bot**: Railway ($5/month)
+- **Database**: Railway PostgreSQL (included)
 
-### Frontend
+**Alternative Stack**:
+- **Frontend**: Netlify
+- **Backend + Bot**: Render
+- **Database**: Supabase (free tier)
 
-Deploy to Vercel:
+### Quick Start
 
-```bash
-cd packages/frontend
-vercel
-```
+1. **Deploy Backend**:
+   ```bash
+   # Railway
+   railway init
+   railway add postgresql
+   cd packages/backend && railway up
+   ```
 
-Update `NEXT_PUBLIC_API_URL` to your backend URL.
+2. **Deploy Frontend**:
+   ```bash
+   # Vercel
+   cd packages/frontend && vercel --prod
+   ```
+
+3. **Update Discord OAuth**:
+   - Add production callback URL in Discord Developer Portal
+   - Update environment variables with production URLs
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete instructions, VPS setup, Docker deployment, and troubleshooting.
 
 ## Contributing
 
