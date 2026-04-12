@@ -1,10 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextResponse } from 'next/server'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { code } = req.query
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams
+  const code = searchParams.get('code')
 
   if (!code) {
-    return res.status(400).json({ error: 'Brak kodu autoryzacji' })
+    return NextResponse.json({ error: 'Brak kodu autoryzacji' }, { status: 400 })
   }
 
   try {
@@ -18,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         client_id: process.env.DISCORD_CLIENT_ID || '1492693587614371971',
         client_secret: process.env.DISCORD_CLIENT_SECRET || 'eA4BMt0BH9iQW3_adbrdAj2Xs8azh5yY',
         grant_type: 'authorization_code',
-        code: code as string,
+        code: code,
         redirect_uri: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://panel-discord-rp.vercel.app'}/api/auth/callback`,
       }),
     })
@@ -58,13 +59,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       accessToken: tokenData.access_token,
     }
 
+    // Create response and redirect to dashboard
+    const response = NextResponse.redirect(new URL('/dashboard', request.url))
+    
     // Set session cookie
-    res.setHeader('Set-Cookie', `session=${JSON.stringify(sessionData)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`)
+    response.cookies.set('session', JSON.stringify(sessionData), {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 86400, // 24 hours
+    })
 
-    // Redirect to dashboard
-    res.redirect('/dashboard')
+    return response
   } catch (error) {
     console.error('OAuth callback error:', error)
-    res.status(500).json({ error: 'Błąd podczas autoryzacji' })
+    return NextResponse.json({ error: 'Błąd podczas autoryzacji' }, { status: 500 })
   }
 }
