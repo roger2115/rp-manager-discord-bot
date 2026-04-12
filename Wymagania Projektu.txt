@@ -1,0 +1,49 @@
+                                                            ŹRÓDŁA I NARZĘDZIA
+1. Tutaj masz moje profilowe: "C:\Users\Roger\Documents\PanelDiscordRP\Zerotwo-dwa.jpg"
+2. Autor "ten_røger"
+3. Tajny klucz bota discord: IJvohc03hVwaC3IIDc1fiPfOBpGkj6ev
+4. https://github.com/Tupperbox/TupperboxLegacy/tree/master/commands
+
+PLAN NA PROJEKT:
+
+
+**Temat:** System zarządzania postaciami RP (Dashboard + Bot) z integracją Webhook i systemem progresji.
+
+**Opis projektu:**
+Zaprojektuj architekturę i napisz kod dla systemu "RP Manager", który składa się z panelu WWW (Dashboard) oraz bota Discord. System ma funkcjonalnie przypominać Tupperbox, ale z restrykcyjną kontrolą dostępu na poziomie serwerów i zaawansowaną automatyzacją.
+
+**Kluczowe funkcjonalności i wymagania techniczne:**
+
+#### 1. Zarządzanie Postaciami (System Proxy/Webhook)
+* **Tworzenie:** Użytkownik w panelu definiuje: Imię, Awatar (URL/Upload), Tag (prefix/suffix do wyzwalania webhooka) oraz Brackets (np. `[text]`).
+* **Integracja:** Bot musi wykorzystywać Webhooki Discorda do maskowania wiadomości użytkownika jako postać.
+* **Scoped Access:** Postacie są przypisane do konkretnego ID serwera (Guild ID). Użytkownik może używać swojej postaci tylko na serwerze, na którym została stworzona.
+
+#### 2. System Uprawnień i Bezpieczeństwo
+* **Własność:** Tylko twórca postaci może ją edytować/usuwać domyślnie.
+* **Moderacja:** Osoby z uprawnieniami `BAN_MEMBERS` lub `KICK_MEMBERS` na danym serwerze Discord mają wgląd i możliwość edycji/usunięcia postaci innych użytkowników w panelu (tzw. Staff Override).
+* **Backend:** Użyj OAuth2 Discorda do logowania. Każde zapytanie do API musi sprawdzać sesję użytkownika i jego uprawnienia na danym serwerze (użyj cache'owania uprawnień, aby nie przeciążać Discord API).
+
+#### 3. Progresja i Automatyzacja
+* **Stanowiska (Ranks):** System ma pozwalać na definiowanie ścieżek kariery dla postaci (np. Kadet -> Oficer).
+* **Automatyczny Awans:** Możliwość ustawienia triggerów (np. czas od stworzenia postaci, liczba wysłanych wiadomości przez dany webhook lub manualny przycisk dla moderatora).
+* **Logowanie zdarzeń:** Każdy awans musi generować automatyczne ogłoszenie na zdefiniowanym w panelu kanale `announcement-channel` przy użyciu Rich Embeds.
+
+#### 4. Wytyczne dot. jakości kodu i bezpieczeństwa:
+* **Frontend:** Czysty interfejs (np. React/Next.js + Tailwind) z walidacją formularzy po stronie klienta i serwera (brak pustych pól "Brackets").
+* **Database:** Zabezpiecz bazę danych (PostgreSQL/MongoDB) przed wstrzykiwaniem danych. Użyj ORM (np. Prisma lub Mongoose).
+* **Sanitaryzacja:** Każdy tekst wprowadzany przez użytkownika musi być oczyszczany (sanitize), aby zapobiec atakom XSS w dashboardzie.
+* **Rate Limiting:** Zaimplementuj limity zapytań dla bota, aby uniknąć blokady Tokena przez Discord (429 Too Many Requests).
+
+---
+
+### Dlaczego to podejście jest lepsze?
+
+1.  **Scope (Zasięg):** Twoja prośba o "przypisanie do serwera" rozwiązuje problem z Tupperboxem, gdzie postacie są globalne. Tutaj postać stworzona na "Serwerze A" nie zadziała na "Serwerze B", co jest kluczowe dla balansu RP.
+2.  **Staff Override:** Wprowadzenie uprawnień na podstawie permisji Discorda (`BAN_MEMBERS`) sprawia, że nie musisz ręcznie nadawać rang w panelu – system sam rozpozna, kto jest adminem.
+3.  **Walidacja:** Prompt kładzie nacisk na "Brackets cannot be empty", co eliminuje błędy bota, który nie wiedziałby, jak zareagować na wiadomość.
+4.  **Automatyzacja:** Dodanie logiki awansów bezpośrednio w kodzie bota pozwala na budowanie immersji bez ingerencji administracji w każdy mały awans.
+
+**Czy chciałbyś, abym teraz wygenerował przykładowy schemat bazy danych dla takiego systemu, czy skupiamy się na kodzie bota w Pythonie/JS?**
+
+Panel ma być futurystyczny, zoptymalizowany, płynny o kolorach przewodnich i tylko takich: Niebieski, Fiolet, Biel i Czerń

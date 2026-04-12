@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Character {
+  id             String    @id @default(uuid())
+  userId         String    // Discord User ID
+  guildId        String    // Discord Guild ID
+  name           String
+  avatarUrl      String
+  tag            String
+  brackets       String
+  currentRankId  String?
+  messageCount   Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  currentRank    Rank?      @relation("CharacterCurrentRank", fields: [currentRankId], references: [id])
+  promotions     Promotion[]
+
+  @@unique([guildId, userId, brackets])
+  @@index([guildId, userId])
+  @@index([guildId, brackets])
+  @@map("characters")
+}
+
+model Rank {
+  id                String    @id @default(uuid())
+  guildId           String    // Discord Guild ID
+  name              String
+  order             Int
+  promotionTriggerType  String  // 'time' | 'message_count' | 'manual'
+  promotionTriggerValue Int?   // Days for time, count for messages
+  createdAt         DateTime  @default(now())
+
+  characters        Character[] @relation("CharacterCurrentRank")
+  promotionsFrom    Promotion[] @relation("PromotionFromRank")
+  promotionsTo      Promotion[] @relation("PromotionToRank")
+
+  @@unique([guildId, order])
+  @@index([guildId])
+  @@map("ranks")
+}
+
+model GuildConfig {
+  id                    String    @id @default(uuid())
+  guildId               String    @unique // Discord Guild ID
+  announcementChannelId String?   // Discord Channel ID
+  enableProgression     Boolean   @default(true)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("guild_configs")
+}
+
+model UserSession {
+  id            String    @id @default(uuid())
+  userId        String    @unique // Discord User ID
+  token         String    @unique // Session token (hashed)
+  accessToken   String    // Discord OAuth2 access token (encrypted)
+  refreshToken  String    // Discord OAuth2 refresh token (encrypted)
+  expiresAt     DateTime
+  createdAt     DateTime  @default(now())
+
+  @@index([token])
+  @@map("user_sessions")
+}
+
+model Promotion {
+  id                String    @id @default(uuid())
+  characterId       String
+  fromRankId        String?
+  toRankId          String
+  triggeredBy       String    // 'auto' | 'manual'
+  triggeredByUserId String?   // User ID if manual
+  createdAt         DateTime  @default(now())
+
+  character         Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  fromRank          Rank?     @relation("PromotionFromRank", fields: [fromRankId], references: [id])
+  toRank            Rank      @relation("PromotionToRank", fields: [toRankId], references: [id])
+
+  @@index([characterId])
+  @@index([createdAt])
+  @@map("promotions")
+}
