@@ -8,3 +8,6 @@ out/
 # Vercel
 .vercel
 node_modules
+
+# Backend packages (not needed for frontend)
+packages/
