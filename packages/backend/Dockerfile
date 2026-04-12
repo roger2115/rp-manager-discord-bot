@@ -6,8 +6,8 @@ RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json ./
+RUN npm install --legacy-peer-deps
 
 # Build the source code
 FROM base AS builder
