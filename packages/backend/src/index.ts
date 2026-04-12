@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 import passport from './config/passport';
 import { connectDatabase } from './config/database';
-import { connectRedis } from './config/redis';
 import { apiLimiter } from './middleware/rateLimit';
 
 // Routes
@@ -13,7 +12,6 @@ import authRoutes from './routes/auth';
 import characterRoutes from './routes/characters';
 import progressionRoutes from './routes/progression';
 import guildsRoutes from './routes/guilds';
-import uploadRoutes from './routes/upload';
 import botGuildsRoutes from './routes/botGuilds';
 
 dotenv.config();
@@ -65,7 +63,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/characters', characterRoutes);
 app.use('/api/progression', progressionRoutes);
 app.use('/api/guilds', guildsRoutes);
-app.use('/api/upload', uploadRoutes);
 app.use('/api/bot-guilds', botGuildsRoutes);
 
 // Serve uploaded files with CORS
@@ -84,7 +81,6 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
 async function startServer() {
   try {
     await connectDatabase();
-    await connectRedis();
     
     app.listen(port, () => {
       console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
