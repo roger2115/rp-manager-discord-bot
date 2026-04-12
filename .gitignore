@@ -29,6 +29,16 @@ uploads/
 # Credentials
 MY_CREDENTIALS.txt
 
+# Documentation (local only)
+DEPLOYMENT.md
+PRODUCTION_READY.md
+DEPLOY_NOW.md
+QUICK_DEPLOY.md
+BOT_TOKEN_SETUP.md
+SETUP.md
+FINAL_SETUP.md
+*.txt
+
 # Logs
 logs/
 *.log
