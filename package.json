@@ -1,25 +1,35 @@
 {
-  "name": "rp-manager-system",
+  "name": "@rp-manager/frontend",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "packages/frontend",
-    "packages/backend",
-    "packages/bot"
-  ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:bot\"",
-    "dev:frontend": "npm run dev --workspace=packages/frontend",
-    "dev:backend": "npm run dev --workspace=packages/backend",
-    "dev:bot": "npm run dev --workspace=packages/bot",
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces",
-    "format": "prettier --write \"packages/**/*.{ts,tsx,js,jsx,json,md}\""
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest"
+  },
+  "dependencies": {
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.2",
+    "zod": "^3.22.4",
+    "@hookform/resolvers": "^3.3.3",
+    "axios": "^1.6.2",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prettier": "^3.1.1",
-    "typescript": "^5.3.3"
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "jest": "^29.7.0",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.1.5"
   }
 }

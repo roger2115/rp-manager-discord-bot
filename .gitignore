@@ -1,69 +1,10 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Testing
-coverage/
-*.lcov
-
-# Production
-dist/
-build/
+# Next.js
 .next/
+out/
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Environment
+.env*.local
 
-# Database
-*.db
-*.db-journal
-
-# Uploads
-uploads/
-
-# Credentials
-MY_CREDENTIALS.txt
-
-# Documentation (local only)
-DEPLOYMENT.md
-PRODUCTION_READY.md
-DEPLOY_NOW.md
-QUICK_DEPLOY.md
-BOT_TOKEN_SETUP.md
-SETUP.md
-FINAL_SETUP.md
-*.txt
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-pnpm-debug.log*
-
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Misc
-.cache/
-.temp/
-
-# Prisma
-prisma/dev.db
-prisma/rpmanager.db
+# Vercel
 .vercel
+node_modules
