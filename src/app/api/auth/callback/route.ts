@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Discord OAuth callback handler for App Router
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const code = searchParams.get('code')
