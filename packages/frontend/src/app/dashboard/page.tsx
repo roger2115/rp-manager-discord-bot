@@ -171,24 +171,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Neon background effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-neon-blue/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl"></div>
-      </div>
-
+    <div className="min-h-screen bg-dark-900">
       {/* Navigation */}
-      <nav className="relative bg-dark-800/80 backdrop-blur-md border-b border-neon-blue/30 shadow-lg shadow-neon-blue/10">
+      <nav className="bg-dark-800 border-b border-primary-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-neon-blue via-neon-purple to-neon-blue bg-clip-text text-transparent animate-pulse">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent">
                 RP Manager
               </h1>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-300">Witaj ponownie!</span>
+              <span className="text-gray-400">Witaj ponownie!</span>
               <button 
                 onClick={async () => {
                   try {
@@ -202,7 +196,7 @@ export default function Dashboard() {
                     console.error('Wylogowanie nie powiodło się:', error);
                   }
                 }}
-                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition-all shadow-lg shadow-red-500/30"
+                className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition-all"
               >
                 Wyloguj
               </button>
@@ -212,14 +206,14 @@ export default function Dashboard() {
       </nav>
 
       {/* Main Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Server Selector */}
           <div className="lg:col-span-1">
-            <div className="bg-dark-800/80 backdrop-blur-md border border-neon-blue/30 rounded-lg p-6 shadow-xl shadow-neon-blue/10">
-              <h2 className="text-xl font-semibold text-neon-blue mb-4">Twoje Serwery</h2>
+            <div className="bg-dark-800 border border-primary-900/50 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-primary-400 mb-4">Twoje Serwery</h2>
               {guilds.length === 0 ? (
-                <p className="text-gray-400 text-sm">Nie znaleziono serwerów</p>
+                <p className="text-gray-500 text-sm">Nie znaleziono serwerów</p>
               ) : (
                 <div className="space-y-2">
                   {guilds.map((guild) => (
@@ -228,8 +222,8 @@ export default function Dashboard() {
                       onClick={() => setSelectedGuild(guild.id)}
                       className={`w-full text-left p-3 rounded-lg transition-all ${
                         selectedGuild === guild.id
-                          ? 'bg-gradient-to-r from-neon-blue/20 to-neon-purple/20 border border-neon-blue/50 shadow-lg shadow-neon-blue/20'
-                          : 'bg-dark-700/50 text-gray-300 hover:bg-dark-700 border border-transparent'
+                          ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white'
+                          : 'bg-dark-700 text-gray-300 hover:bg-dark-600 border border-primary-900/30'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -240,7 +234,7 @@ export default function Dashboard() {
                             className="w-10 h-10 rounded-full"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center text-white font-bold">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold">
                             {guild.name.charAt(0)}
                           </div>
                         )}
@@ -255,11 +249,11 @@ export default function Dashboard() {
 
           {/* Characters List */}
           <div className="lg:col-span-2">
-            <div className="bg-dark-800/80 backdrop-blur-md border border-neon-purple/30 rounded-lg p-6 shadow-xl shadow-neon-purple/10">
+            <div className="bg-dark-800 border border-primary-900/50 rounded-lg p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-neon-purple">Twoje Postacie</h2>
+                <h2 className="text-xl font-semibold text-primary-400">Twoje Postacie</h2>
                 <button 
-                  className="px-4 py-2 bg-gradient-to-r from-neon-blue to-neon-purple hover:from-neon-blue/80 hover:to-neon-purple/80 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-neon-purple/30"
+                  className="px-4 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!selectedGuild}
                   onClick={() => setShowCreateModal(true)}
                 >
@@ -286,7 +280,7 @@ export default function Dashboard() {
                       placeholder="Szukaj postaci..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-4 py-2 bg-dark-700/50 border border-neon-blue/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-blue focus:shadow-lg focus:shadow-neon-blue/20"
+                      className="w-full px-4 py-2 bg-dark-700 border border-primary-900/50 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-primary-600"
                     />
                     
                     {groups.length > 0 && (
@@ -295,8 +289,8 @@ export default function Dashboard() {
                           onClick={() => setSelectedGroup('all')}
                           className={`px-3 py-1 rounded-lg text-sm transition-all ${
                             selectedGroup === 'all'
-                              ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-white shadow-lg shadow-neon-blue/30'
-                              : 'bg-dark-700/50 text-gray-300 hover:bg-dark-700 border border-neon-blue/20'
+                              ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white'
+                              : 'bg-dark-700 text-gray-400 hover:bg-dark-600 border border-primary-900/30'
                           }`}
                         >
                           Wszystkie
@@ -307,8 +301,8 @@ export default function Dashboard() {
                             onClick={() => setSelectedGroup(group)}
                             className={`px-3 py-1 rounded-lg text-sm transition-all ${
                               selectedGroup === group
-                                ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-white shadow-lg shadow-neon-purple/30'
-                                : 'bg-dark-700/50 text-gray-300 hover:bg-dark-700 border border-neon-purple/20'
+                                ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white'
+                                : 'bg-dark-700 text-gray-400 hover:bg-dark-600 border border-primary-900/30'
                             }`}
                           >
                             {group}

@@ -49,13 +49,14 @@ export async function sendWebhookMessage(
   try {
     const options: WebhookMessageCreateOptions = {
       content,
-      username: `${character.name} ${character.tag}`,
+      username: character.name, // Only character name, no tag
     };
 
-    // Only add avatar if it's not a localhost URL
+    // Add avatar if it's a valid external URL
     if (character.avatarUrl && 
         !character.avatarUrl.includes('localhost') && 
-        !character.avatarUrl.includes('127.0.0.1')) {
+        !character.avatarUrl.includes('127.0.0.1') &&
+        (character.avatarUrl.startsWith('http://') || character.avatarUrl.startsWith('https://'))) {
       options.avatarURL = character.avatarUrl;
     }
 
