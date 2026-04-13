@@ -20,7 +20,7 @@ export async function GET(request) {
         client_secret: process.env.DISCORD_CLIENT_SECRET || 'eA4BMt0BH9iQW3_adbrdAj2Xs8azh5yY',
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://panel-discord-rp.vercel.app'}/api/auth/callback`,
+        redirect_uri: `${request.headers.get('x-forwarded-proto') || 'https'}://${request.headers.get('host')}/api/auth/callback`,
       }),
     })
 
