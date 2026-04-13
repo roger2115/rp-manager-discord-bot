@@ -34,15 +34,40 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    // In a real app, you'd get this from your API
-    // For now, we'll simulate the data
-    const mockUser: User = {
-      id: '123456789',
-      username: 'TestUser',
-      discriminator: '0001',
-      avatar: null
+    // Get user data from cookie
+    const getUserFromCookie = () => {
+      const cookies = document.cookie.split(';')
+      const userCookie = cookies.find(cookie => cookie.trim().startsWith('discord_user='))
+      
+      if (userCookie) {
+        try {
+          const userData = JSON.parse(decodeURIComponent(userCookie.split('=')[1]))
+          return userData
+        } catch (error) {
+          console.error('Error parsing user cookie:', error)
+          return null
+        }
+      }
+      return null
     }
 
+    const userData = getUserFromCookie()
+    
+    if (!userData) {
+      // Redirect to login if no user data
+      window.location.href = '/'
+      return
+    }
+
+    // Set real user data
+    setUser({
+      id: userData.id,
+      username: userData.username,
+      discriminator: '0000', // Discord removed discriminators
+      avatar: userData.avatar
+    })
+
+    // Mock guilds and characters for now
     const mockGuilds: Guild[] = [
       {
         id: '1',
@@ -62,7 +87,6 @@ export default function Dashboard() {
       }
     ]
 
-    setUser(mockUser)
     setGuilds(mockGuilds)
     setCharacters(mockCharacters)
     if (mockGuilds.length > 0) {
@@ -75,6 +99,26 @@ export default function Dashboard() {
     char.guildId === selectedGuild &&
     char.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const handleLogout = () => {
+    // Clear cookie and redirect
+    document.cookie = 'discord_user=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    window.location.href = '/'
+  }
+
+  const handleAddCharacter = () => {
+    alert('Funkcja dodawania postaci będzie dostępna wkrótce!')
+  }
+
+  const handleEditCharacter = (characterId: string) => {
+    alert(`Edycja postaci ${characterId} będzie dostępna wkrótce!`)
+  }
+
+  const handleDeleteCharacter = (characterId: string) => {
+    if (confirm('Czy na pewno chcesz usunąć tę postać?')) {
+      setCharacters(prev => prev.filter(char => char.id !== characterId))
+    }
+  }
 
   if (loading) {
     return (
@@ -105,7 +149,10 @@ export default function Dashboard() {
               />
               <h1 className="text-2xl font-bold text-white">Panel RP</h1>
             </div>
-            <button className="text-gray-400 hover:text-white transition-colors">
+            <button 
+              onClick={handleLogout}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
               <LogOut className="w-6 h-6" />
             </button>
           </div>
@@ -113,9 +160,17 @@ export default function Dashboard() {
           {user && (
             <div className="mb-8 p-4 bg-white/10 rounded-xl border border-white/20">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
-                  {user.username[0].toUpperCase()}
-                </div>
+                {user.avatar ? (
+                  <img 
+                    src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+                    alt={user.username}
+                    className="w-12 h-12 rounded-full"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold">
+                    {user.username[0].toUpperCase()}
+                  </div>
+                )}
                 <div>
                   <p className="text-white font-semibold">{user.username}</p>
                   <p className="text-gray-400 text-sm">#{user.discriminator}</p>
@@ -157,7 +212,10 @@ export default function Dashboard() {
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-3xl font-bold text-white">Postacie</h2>
-              <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+              <button 
+                onClick={handleAddCharacter}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+              >
                 <Plus className="w-5 h-5" />
                 <span>Dodaj Postać</span>
               </button>
@@ -200,10 +258,16 @@ export default function Dashboard() {
                   </div>
                   <p className="text-gray-300 mb-4 line-clamp-3">{character.description}</p>
                   <div className="flex space-x-2">
-                    <button className="flex-1 bg-purple-600/50 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
+                    <button 
+                      onClick={() => handleEditCharacter(character.id)}
+                      className="flex-1 bg-purple-600/50 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors"
+                    >
                       Edytuj
                     </button>
-                    <button className="flex-1 bg-pink-600/50 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition-colors">
+                    <button 
+                      onClick={() => handleDeleteCharacter(character.id)}
+                      className="flex-1 bg-pink-600/50 text-white py-2 px-4 rounded-lg hover:bg-pink-600 transition-colors"
+                    >
                       Usuń
                     </button>
                   </div>
@@ -218,7 +282,10 @@ export default function Dashboard() {
                 <p className="text-gray-400 mb-6">
                   {searchTerm ? 'Nie znaleziono postaci pasujących do wyszukiwania.' : 'Nie masz jeszcze żadnych postaci na tym serwerze.'}
                 </p>
-                <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105">
+                <button 
+                  onClick={handleAddCharacter}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
+                >
                   Stwórz pierwszą postać
                 </button>
               </div>
