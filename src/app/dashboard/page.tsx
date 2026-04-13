@@ -34,65 +34,60 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    // Get user data from cookie
-    const getUserFromCookie = () => {
-      const cookies = document.cookie.split(';')
-      const userCookie = cookies.find(cookie => cookie.trim().startsWith('discord_user='))
-      
-      if (userCookie) {
-        try {
-          const userData = JSON.parse(decodeURIComponent(userCookie.split('=')[1]))
-          return userData
-        } catch (error) {
-          console.error('Error parsing user cookie:', error)
-          return null
+    // Get user data from API
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('/api/auth/me')
+        
+        if (!response.ok) {
+          // Redirect to login if not authenticated
+          window.location.href = '/'
+          return
         }
+
+        const userData = await response.json()
+        
+        // Set real user data
+        setUser({
+          id: userData.id,
+          username: userData.username,
+          discriminator: '0000', // Discord removed discriminators
+          avatar: userData.avatar
+        })
+
+        // Mock guilds and characters for now
+        const mockGuilds: Guild[] = [
+          {
+            id: '1',
+            name: 'Test Server',
+            icon: null
+          }
+        ]
+
+        const mockCharacters: Character[] = [
+          {
+            id: '1',
+            name: 'Sven',
+            tag: 'Wojownik',
+            avatarUrl: 'https://cdn.discordapp.com/embed/avatars/0.png',
+            description: 'Potężny wojownik z północy',
+            guildId: '1'
+          }
+        ]
+
+        setGuilds(mockGuilds)
+        setCharacters(mockCharacters)
+        if (mockGuilds.length > 0) {
+          setSelectedGuild(mockGuilds[0].id)
+        }
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+        window.location.href = '/'
       }
-      return null
     }
 
-    const userData = getUserFromCookie()
-    
-    if (!userData) {
-      // Redirect to login if no user data
-      window.location.href = '/'
-      return
-    }
-
-    // Set real user data
-    setUser({
-      id: userData.id,
-      username: userData.username,
-      discriminator: '0000', // Discord removed discriminators
-      avatar: userData.avatar
-    })
-
-    // Mock guilds and characters for now
-    const mockGuilds: Guild[] = [
-      {
-        id: '1',
-        name: 'Test Server',
-        icon: null
-      }
-    ]
-
-    const mockCharacters: Character[] = [
-      {
-        id: '1',
-        name: 'Sven',
-        tag: 'Wojownik',
-        avatarUrl: 'https://cdn.discordapp.com/embed/avatars/0.png',
-        description: 'Potężny wojownik z północy',
-        guildId: '1'
-      }
-    ]
-
-    setGuilds(mockGuilds)
-    setCharacters(mockCharacters)
-    if (mockGuilds.length > 0) {
-      setSelectedGuild(mockGuilds[0].id)
-    }
-    setLoading(false)
+    fetchUserData()
   }, [])
 
   const filteredCharacters = characters.filter(char => 

@@ -4,7 +4,10 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
 
+  console.log('OAuth callback called with code:', code ? 'present' : 'missing')
+
   if (!code) {
+    console.log('No code provided, redirecting with error')
     return NextResponse.redirect(new URL('/?error=no_code', request.url))
   }
 
@@ -44,9 +47,11 @@ export async function GET(request) {
     }
 
     const userData = await userResponse.json()
+    console.log('User data received:', { id: userData.id, username: userData.username })
 
     // Create response with redirect
     const response = NextResponse.redirect(new URL('/dashboard', request.url))
+    console.log('Redirecting to dashboard with user cookie')
     
     // Set simple session cookie
     response.cookies.set('discord_user', JSON.stringify({
@@ -55,7 +60,7 @@ export async function GET(request) {
       avatar: userData.avatar
     }), {
       path: '/',
-      httpOnly: true,
+      httpOnly: false, // Allow JavaScript access
       maxAge: 86400, // 24 hours
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax'
