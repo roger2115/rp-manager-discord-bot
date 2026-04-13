@@ -1,4 +1,5 @@
 {
+  "framework": "nextjs",
   "env": {
     "DISCORD_CLIENT_ID": "1492693587614371971",
     "DISCORD_CLIENT_SECRET": "eA4BMt0BH9iQW3_adbrdAj2Xs8azh5yY",
