@@ -25,6 +25,15 @@ interface Character {
   guildId: string
 }
 
+interface BotStatus {
+  isOnline: boolean
+  lastHeartbeat: string | null
+  guilds: number
+  users: number
+  uptime: number | null
+  username: string
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null)
   const [guilds, setGuilds] = useState<Guild[]>([])
@@ -32,6 +41,7 @@ export default function Dashboard() {
   const [characters, setCharacters] = useState<Character[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [botStatus, setBotStatus] = useState<BotStatus | null>(null)
 
   useEffect(() => {
     // Get user data from API
@@ -87,7 +97,26 @@ export default function Dashboard() {
       }
     }
 
+    // Fetch bot status
+    const fetchBotStatus = async () => {
+      try {
+        const response = await fetch('/api/bot/status')
+        if (response.ok) {
+          const status = await response.json()
+          setBotStatus(status.bot)
+        }
+      } catch (error) {
+        console.error('Error fetching bot status:', error)
+      }
+    }
+
     fetchUserData()
+    fetchBotStatus()
+    
+    // Update bot status every 30 seconds
+    const statusInterval = setInterval(fetchBotStatus, 30000)
+    
+    return () => clearInterval(statusInterval)
   }, [])
 
   const filteredCharacters = characters.filter(char => 
@@ -173,6 +202,37 @@ export default function Dashboard() {
               </div>
             </div>
           )}
+
+          {/* Bot Status */}
+          <div className="mb-6 p-4 bg-white/10 rounded-xl border border-white/20">
+            <h3 className="text-white font-semibold mb-3 flex items-center">
+              🤖 Status Bota
+            </h3>
+            {botStatus ? (
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">Status:</span>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    botStatus.isOnline 
+                      ? 'bg-green-600/50 text-green-300' 
+                      : 'bg-red-600/50 text-red-300'
+                  }`}>
+                    {botStatus.isOnline ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">Serwery:</span>
+                  <span className="text-white">{botStatus.guilds}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">Użytkownicy:</span>
+                  <span className="text-white">{botStatus.users}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="text-gray-400 text-sm">Ładowanie...</div>
+            )}
+          </div>
 
           <div className="mb-6">
             <h3 className="text-white font-semibold mb-3 flex items-center">

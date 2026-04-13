@@ -61,7 +61,7 @@ export async function GET(request) {
     }), {
       path: '/',
       httpOnly: false, // Allow JavaScript access
-      maxAge: 86400, // 24 hours
+      maxAge: 30 * 24 * 60 * 60, // 30 days
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax'
     })

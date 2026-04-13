@@ -8,6 +8,22 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true)
+    
+    // Check if user is already logged in
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me')
+        if (response.ok) {
+          // User is logged in, redirect to dashboard
+          window.location.href = '/dashboard'
+        }
+      } catch (error) {
+        // User not logged in, stay on home page
+        console.log('User not authenticated')
+      }
+    }
+    
+    checkAuth()
   }, [])
 
   const handleLogin = () => {
