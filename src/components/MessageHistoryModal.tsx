@@ -43,8 +43,8 @@ export default function MessageHistoryModal({ isOpen, onClose, character }: Mess
         const data = await response.json()
         setMessages(data)
       }
-    } catch (error) {
-      console.error('Error fetching messages:', error)
+    } catch (err) {
+      console.error('Error fetching messages:', err)
     } finally {
       setLoading(false)
     }

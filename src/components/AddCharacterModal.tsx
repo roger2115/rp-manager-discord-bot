@@ -51,8 +51,8 @@ export default function AddCharacterModal({ isOpen, onClose, onAdd, guildId }: A
       })
       
       onClose()
-    } catch (error) {
-      console.error('Error adding character:', error)
+    } catch (err) {
+      console.error('Error adding character:', err)
     } finally {
       setIsSubmitting(false)
     }

@@ -81,8 +81,8 @@ export default function Dashboard() {
         fetchBotStatus(),
         fetchGuilds()
       ])
-    } catch (error) {
-      console.error('Error initializing dashboard:', error)
+    } catch (err) {
+      console.error('Error initializing dashboard:', err)
       error('Błąd', 'Nie udało się załadować danych użytkownika')
       window.location.href = '/'
     } finally {
@@ -112,8 +112,8 @@ export default function Dashboard() {
           setSelectedGuild(data[0].id)
         }
       }
-    } catch (error) {
-      console.error('Error fetching guilds:', error)
+    } catch (err) {
+      console.error('Error fetching guilds:', err)
       error('Błąd', 'Nie udało się załadować listy serwerów')
     }
   }
@@ -127,8 +127,8 @@ export default function Dashboard() {
         const data = await response.json()
         setCharacters(data)
       }
-    } catch (error) {
-      console.error('Error fetching characters:', error)
+    } catch (err) {
+      console.error('Error fetching characters:', err)
       error('Błąd', 'Nie udało się załadować postaci')
     }
   }
@@ -161,10 +161,10 @@ export default function Dashboard() {
       } else {
         throw new Error('Failed to add character')
       }
-    } catch (error) {
-      console.error('Error adding character:', error)
+    } catch (err) {
+      console.error('Error adding character:', err)
       error('Błąd', 'Nie udało się dodać postaci')
-      throw error
+      throw err
     }
   }
 
@@ -188,8 +188,8 @@ export default function Dashboard() {
       } else {
         throw new Error('Failed to delete character')
       }
-    } catch (error) {
-      console.error('Error deleting character:', error)
+    } catch (err) {
+      console.error('Error deleting character:', err)
       error('Błąd', 'Nie udało się usunąć postaci')
     }
   }
