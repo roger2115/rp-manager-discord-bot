@@ -97,7 +97,14 @@ export default function Dashboard() {
         {/* Sidebar */}
         <div className="w-80 bg-black/20 backdrop-blur-md border-r border-white/10 p-6">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl font-bold text-white">Panel RP</h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/logo.png" 
+                alt="Panel RP Logo" 
+                className="w-8 h-8 rounded-lg"
+              />
+              <h1 className="text-2xl font-bold text-white">Panel RP</h1>
+            </div>
             <button className="text-gray-400 hover:text-white transition-colors">
               <LogOut className="w-6 h-6" />
             </button>

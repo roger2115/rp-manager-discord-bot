@@ -38,6 +38,13 @@ export default function Home() {
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         <div className="text-center mb-12 animate-float">
+          <div className="mb-6">
+            <img 
+              src="/logo.png" 
+              alt="Panel RP Discord Logo" 
+              className="w-32 h-32 mx-auto mb-4 rounded-2xl shadow-2xl"
+            />
+          </div>
           <h1 className="text-6xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             Panel RP Discord
           </h1>
